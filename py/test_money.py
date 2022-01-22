@@ -4,6 +4,7 @@ from portfolio import Portfolio
 
 
 class TestMoney(unittest.TestCase):
+
     def testMultiplication(self):
         tenEuros = Money(10, "EUR")
         twentyEuros = Money(20, "EUR")
@@ -22,6 +23,15 @@ class TestMoney(unittest.TestCase):
         portfolio = Portfolio()
         portfolio.add(fiveDollars, tenDollars)
         self.assertEqual(fifteenDollars, portfolio.evaluate("USD"))
+
+    def testAddingEurAndUsd(self):
+        fiveDollars = Money(5, "USD")
+        tenEuros = Money(10, "EUR")
+        portfolio = Portfolio()
+        portfolio.add(fiveDollars, tenEuros)
+        expected = Money(17, "USD")
+        actual = portfolio.evaluate("USD")
+        self.assertEqual(actual, expected, "Expected %s, but got %s" % (expected, actual))
 
 
 if __name__ == '__main__':
