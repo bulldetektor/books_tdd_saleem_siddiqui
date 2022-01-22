@@ -3,6 +3,10 @@ const assert = require("assert");
 const Money = require("./money");
 const Portfolio = require("./portfolio");
 
+
+class Junior
+extends Developer {}
+
 class MoneyTests {
     testMultiplication() {
         let tenEuros = new Money(10, "EUR");
