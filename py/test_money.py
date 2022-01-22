@@ -33,6 +33,20 @@ class TestMoney(unittest.TestCase):
         actual = portfolio.evaluate("USD")
         self.assertEqual(actual, expected, "Expected %s, but got %s" % (expected, actual))
 
+    # 1 USD + 1100 KRW = 2200 KRW
+    def testAddingUsdAndWon(self):
+        oneDollar = Money(1, "USD")
+        elevenHundredWons = Money(1100, "KRW")
+        portfolio = Portfolio()
+        portfolio.add(oneDollar, elevenHundredWons)
+        expected = Money(2200, "KRW")
+        actual = portfolio.evaluate("KRW")
+        self.assertEqual(actual, expected, "Expected %s, but got %s" % (expected, actual))
+
+    # determine exchange rate based on the currencies involved (from -> to)
+    # allow exchange rates to be modified
+    # handle unknown exchange rates
+
 
 if __name__ == '__main__':
     unittest.main()

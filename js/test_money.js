@@ -16,9 +16,9 @@ class MoneyTests {
 
     testDivision() {
         let originalMoney = new Money(4002, "KRW");
-        
+
         let actual = originalMoney.divide(4);
-        
+
         let expected = new Money(1000.5, "KRW");
         assert.deepStrictEqual(actual, expected);
     }
@@ -28,22 +28,39 @@ class MoneyTests {
         let tenDollars = new Money(10, "USD");
         let fifteenDollars = new Money(15, "USD");
         let portfolio = new Portfolio();
-        
+
         portfolio.add(fiveDollars, tenDollars);
-        
+
         assert.deepStrictEqual(portfolio.evaluate("USD"), fifteenDollars);
     }
 
-    testAdditionOfEurosAndDollars(){
+    testAdditionOfEurosAndDollars() {
         let fiveDollars = new Money(5, "USD");
         let tenEuros = new Money(10, "EUR");
         let portfolio = new Portfolio();
-        
+
         portfolio.add(fiveDollars, tenEuros);
-        
+
         let expected = new Money(17, "USD");
         assert.deepStrictEqual(portfolio.evaluate("USD"), expected);
     }
+
+    // 1 USD + 1100 KRW = 2200 KRW
+    testAdditionOfDollarsAndWons() {
+        let oneDollar = new Money(1, "USD");
+        let elevenHundredWon = new Money(1100, "KRW");
+        let portfolio = new Portfolio();
+
+        portfolio.add(oneDollar, elevenHundredWon);
+
+        let expected = new Money(2200, "KRW");
+        assert.deepStrictEqual(portfolio.evaluate("KRW"), expected);
+    }
+
+    // determine exchange rate based on the currencies involved (from -> to)
+    // allow exchange rates to be modified
+    // handle unknown exchange rates
+
 
 
     getAllTestMethods() {
@@ -58,7 +75,7 @@ class MoneyTests {
 
         let tests = this.getAllTestMethods();
         console.log("Discovered %d test(s)", tests.length);
-        
+
         let i = 0, failures = 0;
         tests.forEach((testName) => {
             let test = Reflect.get(this, testName);
@@ -73,7 +90,7 @@ class MoneyTests {
                 }
                 else {
                     this.print("Unhandled error", "red");
-                    throw(e);
+                    throw (e);
                 }
             }
         });
@@ -82,7 +99,7 @@ class MoneyTests {
         if (failures) {
             this.print(`${failures} test(s) failed`, "red")
         }
-        this.print(`${i-failures} test(s) succeeded`, "green");
+        this.print(`${i - failures} test(s) succeeded`, "green");
         console.log();
 
     }

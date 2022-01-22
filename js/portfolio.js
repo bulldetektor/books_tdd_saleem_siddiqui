@@ -17,12 +17,16 @@ class Portfolio {
     }
 
     convert(money, currency) {
+        let exchangeRates = new Map();
+        exchangeRates.set("EUR->USD", 1.2);
+        exchangeRates.set("USD->KRW", 1100);
+
         if (money.currency === currency) {
             return money.amount;
         }
 
-        const eurToUsd = 1.2;
-        return money.amount * eurToUsd;
+        let conversionKey = `${money.currency}->${currency}`;
+        return money.amount * exchangeRates.get(conversionKey);
     }
 }
 
