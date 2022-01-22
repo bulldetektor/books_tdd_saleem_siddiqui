@@ -12,8 +12,17 @@ class Portfolio:
 
     def evaluate(self, currency):
         sum = 0
+        conversionFailures = []
         for m in self.moneys:
-            sum += self.__convert(m, currency)
+            try:
+                sum += self.__convert(m, currency)
+            except KeyError as ke:
+                conversionFailures.append(ke)
+
+        if(len(conversionFailures) > 0):
+            raise Exception("Missing exchange rate(s):[%s]" % (
+                ",".join(f.args[0] for f in conversionFailures)))
+
         return Money(sum, currency)
 
     def __convert(self, money: Money, currency):

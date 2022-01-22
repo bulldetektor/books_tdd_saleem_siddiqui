@@ -31,7 +31,8 @@ class TestMoney(unittest.TestCase):
         portfolio.add(fiveDollars, tenEuros)
         expected = Money(17, "USD")
         actual = portfolio.evaluate("USD")
-        self.assertEqual(actual, expected, "Expected %s, but got %s" % (expected, actual))
+        self.assertEqual(actual, expected,
+                         "Expected %s, but got %s" % (expected, actual))
 
     # 1 USD + 1100 KRW = 2200 KRW
     def testAddingUsdAndWon(self):
@@ -41,11 +42,23 @@ class TestMoney(unittest.TestCase):
         portfolio.add(oneDollar, elevenHundredWons)
         expected = Money(2200, "KRW")
         actual = portfolio.evaluate("KRW")
-        self.assertEqual(actual, expected, "Expected %s, but got %s" % (expected, actual))
+        self.assertEqual(actual, expected,
+                         "Expected %s, but got %s" % (expected, actual))
 
-    # determine exchange rate based on the currencies involved (from -> to)
-    # allow exchange rates to be modified
     # handle unknown exchange rates
+    def testAdditionOfMultipleMissingExchangeRates(self):
+        oneDollar = Money(1, "USD")
+        oneEuro = Money(1, "EUR")
+        oneWon = Money(1, "KRW")
+        portfolio = Portfolio()
+        portfolio.add(oneDollar, oneEuro, oneWon)
+        with self.assertRaisesRegex(
+            Exception,
+            r"Missing exchange rate\(s\):\[USD\->Kalganid,EUR\->Kalganid,KRW\->Kalganid\]",
+        ):
+            portfolio.evaluate("Kalganid")
+
+    # allow exchange rates to be modified
 
 
 if __name__ == '__main__':

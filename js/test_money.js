@@ -57,9 +57,21 @@ class MoneyTests {
         assert.deepStrictEqual(portfolio.evaluate("KRW"), expected);
     }
 
-    // determine exchange rate based on the currencies involved (from -> to)
-    // allow exchange rates to be modified
     // handle unknown exchange rates
+    testAdditionOfMultipleMissingExchangeRates() {
+        let oneDollar = new Money(1, "USD");
+        let oneEuro = new Money(1, "EUR");
+        let oneWon = new Money(1, "KRW");
+        let portfolio = new Portfolio();
+
+        portfolio.add(oneDollar, oneEuro, oneWon);
+
+        let expectedError = "Missing exchange rate(s): [USD->Kalganid,EUR->Kalganid,KRW->Kalganid]"
+        assert.throws(() => portfolio.evaluate("Kalganid"), expectedError);
+    }
+
+    // refactor conversion key generator
+    // allow exchange rates to be modified
 
 
 
