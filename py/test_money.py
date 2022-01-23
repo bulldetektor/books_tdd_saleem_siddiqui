@@ -1,4 +1,5 @@
 from shutil import ExecError
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 import unittest
 from money import Money
 from portfolio import Portfolio
@@ -65,10 +66,14 @@ class TestMoney(unittest.TestCase):
         ):
             portfolio.evaluate(self.bank, "Kalganid")
 
-    def testConversion(self):
+    def testConversionWitDifferentRatesBetweenTwoCurrencies(self):
         tenEuros = Money(10, "EUR")
         actual = self.bank.convert(tenEuros, "USD")
         self.assertEqual(actual, Money(12, "USD"))
+
+        self.bank.addExchangeRate("EUR", "USD", 1.3)
+        actual = self.bank.convert(tenEuros, "USD")
+        self.assertEqual(actual, Money(13, "USD"))
 
     def testConversionWithMissingExchangeRates(self):
         tenEuros = Money(10, "EUR")

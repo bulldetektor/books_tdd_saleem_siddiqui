@@ -6,7 +6,7 @@ const Bank = require("./bank");
 
 class MoneyTests {
 
-    constructor() {
+    setUp() {
         this.bank = new Bank();
         this.bank.addExchangeRate("EUR", "USD", 1.2);
         this.bank.addExchangeRate("USD", "KRW", 1100);
@@ -81,11 +81,19 @@ class MoneyTests {
     }
 
     // refactor conversion key generator
-    testConversion() {
+    testConversionWithDifferentRatesBetweenTwoCurrencies() {
         const tenEuros = new Money(10, "EUR");
-
         let actual = this.bank.convert(tenEuros, "USD");
+        assert.deepStrictEqual(actual, new Money(12, "USD"));
 
+        this.bank.addExchangeRate("EUR", "USD", 1.3);
+        actual = this.bank.convert(tenEuros, "USD");
+        assert.deepStrictEqual(actual, new Money(13, "USD"));
+    }
+
+    testConversionRateFromEurToUsd() {
+        const tenEuros = new Money(10, "EUR");
+        let actual = this.bank.convert(tenEuros, "USD");
         assert.deepStrictEqual(actual, new Money(12, "USD"));
     }
 
@@ -114,12 +122,16 @@ class MoneyTests {
 
         let tests = this.getAllTestMethods();
         console.log("Discovered %d test(s)", tests.length);
+        
+        tests = this.randomizeTestOrder(tests);
+        console.log("Test order randomized")
 
         let i = 0, failures = 0;
         tests.forEach((testName) => {
             let test = Reflect.get(this, testName);
             console.log("Running %d/%d: %s()", ++i, tests.length, testName);
             try {
+                this.setUp();
                 Reflect.apply(test, this, []);
             }
             catch (e) {
@@ -140,7 +152,14 @@ class MoneyTests {
         }
         this.print(`${i - failures} test(s) succeeded`, "green");
         console.log();
+    }
 
+    randomizeTestOrder(testMethods){
+        for (let i = testMethods.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i+1));
+            [testMethods[i], testMethods[j]] = [testMethods[j], testMethods[i]];
+        }
+        return testMethods;
     }
 
     print(msg, color) {
